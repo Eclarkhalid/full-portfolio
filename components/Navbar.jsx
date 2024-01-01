@@ -36,15 +36,15 @@ export default function Navbar() {
                 </Link>
                 <Link className={pathname === '/add' ? active : inActive} href="#">
                   <PackageIcon className="h-4 w-4" />
-                  Skills
+                  Experience
                 </Link>
                 <Link className={pathname === '/add' ? active : inActive} href="#">
                   <UsersIcon className="h-4 w-4" />
-                  Clients
+                  Testimonials
                 </Link>
                 <Link className={pathname === '/add' ? active : inActive} href="#">
                   <LineChartIcon className="h-4 w-4" />
-                  Analytics
+                  Articles
                 </Link>
               </nav>
             </div>

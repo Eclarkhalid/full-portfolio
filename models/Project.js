@@ -4,7 +4,7 @@ const ProjectSchema = new Schema({
   title: String,
   details: String,
   date: String,
-  image: [String],
+  image: String,
   projectUrl: String,
   gitUrl: String,
   technologies: String,

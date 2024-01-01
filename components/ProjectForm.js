@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function ProjectForm({
@@ -15,16 +17,36 @@ export default function ProjectForm({
 }) {
   const [title, setTitle] = useState(existingTitle || '');
   const [details, setDetails] = useState(existingDetails || '');
-  const [image, setImage] = useState(existingImage || []);
+  const [image, setImage] = useState(existingImage || '');
   const [technologies, setTechnologies] = useState(existingTechnologies || '');
   const [date, setDate] = useState(existingDate || '');
   const [projectUrl, setProjectUrl] = useState(existingProjectUrl || '');
   const [gitUrl, setGitUrl] = useState(existingGitUrl || '');
 
+  const [redirect, setRedirect] = useState(false);
+  const router = useRouter();
+
+  async function createProject(ev) {
+    ev.preventDefault();
+    const data = {title, details, image, technologies, date, projectUrl, gitUrl};
+
+    if(_id) {
+      await axios.put('/api/projects', {...data, _id});
+    } else {
+      await axios.post('/api/projects', data)
+    }
+    setRedirect(true);
+  }
+
+  if (redirect) {
+    router.push('/projects');
+    return null;
+  }
+
   return <>
     <div className="border shadow-sm rounded-lg p-2">
 
-      <form className="flex flex-col gap-4">
+      <form onSubmit={createProject} className="flex flex-col gap-4">
         <label className="text-lg font-medium mb-2">
           Project Name:
           <Input required
@@ -32,25 +54,26 @@ export default function ProjectForm({
             placeholder="Enter project name"
             type="text"
             value={title}
-            onchange={ev => setTitle(ev.target.value)}
+            onChange={ev => setTitle(ev.target.value)}
           />
         </label>
         <label className="text-lg font-medium mb-2">
           Project Details:
           <Textarea
             className="bg-white p-2 rounded border mt-2 shadow-sm w-full"
-            placeholder="Type your message here."
+            placeholder="Type your projects description."
             rows={5}
             value={details}
-            onchange={ev => setDetails(ev.target.value)}
+            onChange={ev => setDetails(ev.target.value)}
           />
         </label>
         <label className="text-lg font-medium mb-2">
           Project Image:
-          <Input required id="picture" type="file"
+          <Input required id="picture" type="text"
             className="bg-white p-2 rounded border mt-2 shadow-sm w-full"
             value={image}
-            onchange={ev => setImage(ev.target.value)}
+            onChange={ev => setImage(ev.target.value)}
+            placeholder="Image Url here.."
           />
         </label>
         <label className="text-lg font-medium mb-2">
@@ -60,14 +83,14 @@ export default function ProjectForm({
             placeholder="Enter technologies used"
             type="text"
             value={technologies}
-            onchange={ev => setTechnologies(ev.target.value)}
+            onChange={ev => setTechnologies(ev.target.value)}
           />
         </label>
         <label className="text-lg font-medium mb-2">
           Completion Date:
           <Input required className="bg-white p-2 rounded border mt-2 shadow-sm w-full" type="date" 
           value={date}
-          onchange={ev => setDate(ev.target.value)}
+          onChange={ev => setDate(ev.target.value)}
           />
         </label>
         <label className="text-lg font-medium mb-2">
@@ -77,7 +100,7 @@ export default function ProjectForm({
             placeholder="Enter live project URL"
             type="text"
             value={projectUrl}
-            onchange={ev => setProjectUrl(ev.target.value)}
+            onChange={ev => setProjectUrl(ev.target.value)}
           />
         </label>
         <label className="text-lg font-medium mb-2">
@@ -87,7 +110,7 @@ export default function ProjectForm({
             placeholder="Enter source code URL"
             type="text"
             value={gitUrl}
-            onchange={ev => setGitUrl(ev.target.value)}
+            onChange={ev => setGitUrl(ev.target.value)}
           />
         </label>
         <Button>
